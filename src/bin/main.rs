@@ -61,6 +61,15 @@ fn run_detection(capturer: &Window, db: &Database, arguments: &Arguments) {
         .max_by(|a, b| a.1.total_cmp(&b.1))
         .map(|best| best.0);
 
+    println!("+----------------------+------------+------------+----------------+----------+--------+\n| {:<20} | {:>10} | {:>10} | {:>14} | {:<8} | {:<6} |\n+----------------------+------------+------------+----------------+----------+--------+",
+    "Item",
+    "Plat",
+    "Ducats",
+    "D/P",
+    "Status",
+    "Best",
+    );
+
     for (index, item) in items.iter().enumerate() {
         if let Some(item) = item {
             match arguments.info_display_mode {
@@ -68,14 +77,15 @@ fn run_detection(capturer: &Window, db: &Database, arguments: &Arguments) {
                     "{}\n\t{}\t{}\t{}",
                     item.drop_name,
                     item.platinum,
-                    item.ducats as f32 / 10.0,
+                    item.ducats as f32,
                     if Some(index) == best { "<----" } else { "" }
                 ),
-                InfoDisplayMode::Combined => info!(
-                    "{}\n\tPlatinum: {}\tDucats: {}\t{}",
+                InfoDisplayMode::Combined => println!("| {:<20.20} | {:>10.1} | {:>10.0} | {:>14.1} | {:<8.8} | {:<6.6} |\n+----------------------+------------+------------+----------------+----------+--------+",
                     item.drop_name,
                     item.platinum,
-                    item.ducats as f32 / 10.0,
+                    item.ducats as f32,
+                    item.ducats as f32 / item.platinum as f32,
+                    if item.vaulted {"vaulted"} else {""},
                     if Some(index) == best { "<----" } else { "" }
                 ),
                 InfoDisplayMode::All => info!(
@@ -379,7 +389,7 @@ pub struct Arguments {
     /// - `minimal`: Minimal (Shows only the name, platinum, and ducats)
     /// - `combined`: Combined (Shows platinum and ducats, with labels)
     /// - `all`: All (Also shows today and yesterday's volumes)
-    #[arg(short, long, default_value = "minimal")]
+    #[arg(short, long, default_value = "combined")]
     #[clap(verbatim_doc_comment)]
     pub info_display_mode: InfoDisplayMode,
 

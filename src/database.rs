@@ -24,6 +24,7 @@ pub struct Item {
     pub drop_name: String,
     pub platinum: f32,
     pub ducats: usize,
+    pub vaulted: bool,
     pub yesterday_vol: usize,
     pub today_vol: usize,
 }
@@ -103,12 +104,14 @@ impl Database {
                         };
 
                         let ducats = ducat_item.ducats;
+                        let vaulted = equipment_item.vaulted;
 
                         Some(Item {
                             name: name.to_string(),
                             drop_name,
                             platinum,
                             ducats,
+                            vaulted,
                             yesterday_vol,
                             today_vol,
                         })
@@ -119,6 +122,7 @@ impl Database {
                 drop_name: name.to_owned(),
                 platinum: 0.0,
                 ducats: 0,
+                vaulted: false,
                 yesterday_vol: 0,
                 today_vol: 0,
             }))
